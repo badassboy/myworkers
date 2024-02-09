@@ -58,6 +58,7 @@ class Business{
 public function loginAdmin($username,$password)
 {
 		$dbh = DB();
+		echo gettype($dbh);
 		$stmt = $dbh->prepare("SELECT * FROM admin WHERE username = ?");
 
 		$stmt->execute([$username]);

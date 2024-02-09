@@ -3,9 +3,9 @@
   <div class="album py-5 bg-light">
     <div class="container">
 
-      <h3 class="text-center">CRM Platform For All Your Business Needs</h3>
+      <h3 class="text-center">HRM Solution for your business.</h3>
       <p class="text-center">
-      <small>HubSpot’s CRM platform has all the tools and integrations you need for marketing, sales, content management, and customer service. Each product in the platform is powerful alone, but the real magic happens when you use them together.</small>
+      <small>Cloudsoft HRM platform has all the tools and integrations you need for YOUR HRM business. Each product in the platform is powerful alone, but the real magic happens when you use them together.</small>
    </p>
 
 
