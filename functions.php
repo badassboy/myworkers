@@ -150,8 +150,8 @@ public function loginAdmin($username,$password)
 	}
 
 
-	public function registerEmployee($firstName,$lastName,$country,$mobile,$residence,$address,$city,
-		$region,$gender,$emp_status,$department,$email,$file_name)
+	public function registerEmployee($fullName,$mobile,$residence,$address,
+	$gender,$emp_status,$department,$email,$file_name)
 	{
 		$dbs = DB();
 
@@ -190,10 +190,9 @@ public function loginAdmin($username,$password)
 
 			move_uploaded_file($file_tmp, "adverts/images/".$file_name);
 
-$stmt = $dbs->prepare("INSERT INTO employees(firstName,lastName,country,mobile,residence,address,city,region,gender,emp_status,department,email,picture) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+$stmt = $dbs->prepare("INSERT INTO employees(fullName,mobile,residence,address,gender,emp_status,department,email,picture) VALUES(?,?,?,?,?,?,?,?,?)");
 
-$stmt->execute(array($firstName,$lastName,$country,$mobile,$residence,$address,$city,
-		$region,$gender,$emp_status,$department,$email,$dir.$file_name));
+$stmt->execute(array($fullName,$mobile,$residence,$address,$gender,$emp_status,$department,$email,$dir.$file_name));
 
 $inserted = $stmt->rowCount();
 if($inserted>0){
@@ -211,26 +210,49 @@ if($inserted>0){
 
 	public function getAllEmployees()
 	{
-		$db=DB();
-		$stmt=$db->prepare("SELECT * FROM employees");
-		$stmt->execute();
+		try{
+
+			$db=DB();
+		$stmt=$db->query("SELECT * FROM employees");
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+
+		}catch(PDOException $ex){
+			return $ex->getMessage();
+		}
+		
 	}
 
 	public function displayAdvert()
 	{
-		$db = DB();
-		$stmt = $db->prepare("SELECT * FROM advert");
-		$stmt->execute();
+		try{
+			$db = DB();
+		$stmt = $db->query("SELECT * FROM advert");
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
 		
 	}
 
 	// employee leave
-	public function employeeLeave($employee,$leave_type,$duration,$starting,$ending,$note)
-	{
+	public function employeeLeave(array $leaveData)
+	{	
+		$fields = ['employee','leave_type','duration',
+					'starting','ending','note'];
+		foreach ($fields as $keys) {
+			if (!array_key_exists($keys, $leaveData)) {
+				return false;
+			}
+		}
+
+		$employee = $leaveData['employee'];
+		$leave_type = $leaveData['leave_type'];
+		$duration = $leaveData['duration'];
+		$starting = $leaveData['starting'];
+		$ending = $leaveData['ending'];
+		$note = $leaveData['note'];
 
 		$db=DB();
 		
@@ -339,6 +361,13 @@ if($inserted>0){
 
 	public function jobdescription(array $jobArray){
 
+$fields = array("title","level","job_type","salary","duties","note");
+foreach ($fields as $keys) {
+	if (!array_key_exists($keys, $jobArray)) {
+		return false;
+	}
+}
+
 		$title = $jobArray["title"];
 		$level = $jobArray["level"];
 		$job_type = $jobArray["job_type"];
@@ -346,7 +375,8 @@ if($inserted>0){
 		$duties = $jobArray["duties"];
 		$note = $jobArray["note"];
 
-		$db = DB();
+		try{
+			$db = DB();
 		$stmt = $db->prepare("INSERT INTO  job_description(title,level,job_type,
 			salary,duties,note) VALUES(?,?,?,?,?,?)");
 		$stmt->execute([$title,$level,$job_type,$salary,$duties,$note]);
@@ -356,6 +386,10 @@ if($inserted>0){
 		}else {
 			return false;
 		}
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+		
 
 
 		

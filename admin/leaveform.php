@@ -4,17 +4,26 @@ include("../functions.php");
 $ch = new Business();
 
 if(isset($_POST['laliga'])){
-    $employee = $ch->testInput($_POST['employee']);
-    $leave = $ch->testInput($_POST['leave_type']);
-    $duration = $ch->testInput($_POST['duration']);
-    $starting = $ch->testInput($_POST['starting']);
+    $employee = $ch->testInput($_POST['employee']) ?? "";
+    $leave = $ch->testInput($_POST['leave_type']) ??  "";
+    $duration = $ch->testInput($_POST['duration']) ?? "";
+    $starting = $ch->testInput($_POST['starting']) ?? "";
     $ending = $ch->testInput($_POST['ending']);
     $note = $_POST['note'] ??  "";
-  // var_dump($picture);
+    
+    $leaveData = [
+
+      "employee" => $employee,
+      "leave_type" => $leave,
+      "duration" => $duration,
+      "starting" => $starting,
+      "ending" => $ending,
+      "note" => $note,
+    ];
   
 
   
-    $laliga = $ch->employeeLeave($employee,$leave,$duration,$starting,$ending,$note);
+    $laliga = $ch->employeeLeave($leaveData);
     if($laliga){
       $msg = '<div class="alert alert-success" role="alert">Employee Leave Added</div>';
     }else {

@@ -10,27 +10,22 @@ $info = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
-	$username = trim($_POST['username']);
-	$pwd = trim($_POST['pwd']);
+	$username = trim($_POST['username']) ?? "";
+	$pwd = trim($_POST['pwd']) ?? "";
 	
-	if (!empty($username) || !empty($pwd)) {
+	
 
 		$user = $ch->loginAdmin($username,$pwd);
-		if ($user AND $user['verified'] == "yes") {
+		if ($user) {
 			$_SESSION['username']=$username;
 			header("Location: homepage.php");
+			exit();
 			// return;
 		}else{
 			$info = '<div class="alert alert-danger" role="alert">Login failed</div>';
 		}
 
-	}else {
-
-		$info = '<div class="alert alert-danger" role="alert">Fields required</div>';;	
-		
-		
-
-	}
+	
 }
 
 
